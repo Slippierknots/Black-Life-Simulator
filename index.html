@@ -6,10 +6,10 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#FFFFFF"/>
-    <link rel="apple-touch-icon" href="https://placehold.co/192x192/000000/FFFFFF?text=♂">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/000000/FFFFFF?text=🔊">
     <link rel="manifest" href="manifest.json">
 
-    <title>Symbol Sound Player</title>
+    <title>Custom Sound Player</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -31,19 +31,24 @@
 </head>
 <body class="bg-white flex items-center justify-center h-screen">
 
-    <!-- The SVG symbol is now the button -->
-    <img id="playSoundSymbol" src="Black Life Simulator.png" ... > 
+    <!-- The image is the button. Replace 'my-button-image.png' with your image file. -->
+    <img id="playSoundSymbol" src="Black Life Simulator" alt="Play Sound" class="w-64 h-64 cursor-pointer">
+
+    <!-- Hidden audio element to hold your custom sound. Replace 'smoke-detector-beep.mp3' with your audio file. -->
+    <audio id="customSound" src="smoke-detector-beep.mp3" preload="auto"></audio>
 
     <script>
         // --- PWA Service Worker and Manifest Setup ---
         
         // 1. Create and register the Service Worker
         const swCode = `
-            const CACHE_NAME = 'symbol-player-pwa-v1';
+            const CACHE_NAME = 'custom-sound-pwa-v1';
+            // IMPORTANT: Add your image and sound files here to make them work offline
             const urlsToCache = [
                 '/',
-                '/index.html'
-				'Black Life Simulator.png'
+                '/index.html',
+                'Black Life Simulator.png', // The image for the button
+                'smoke-detector-beep.mp3'       // The custom MP3 sound
             ];
 
             self.addEventListener('install', event => {
@@ -60,10 +65,8 @@
                 event.respondWith(
                     caches.match(event.request)
                         .then(response => {
-                            if (response) {
-                                return response;
-                            }
-                            return fetch(event.request);
+                            // Return cached version if found, otherwise fetch from network
+                            return response || fetch(event.request);
                         })
                 );
             });
@@ -85,21 +88,21 @@
 
         // 2. Create and link the Manifest file
         const manifest = {
-            "name": "Symbol Sound Player",
-            "short_name": "SymbolSound",
+            "name": "Custom Sound Player",
+            "short_name": "SoundPlayer",
             "start_url": ".",
             "display": "standalone",
             "background_color": "#ffffff",
             "theme_color": "#ffffff",
-            "description": "A simple PWA that plays a sound when the symbol is clicked.",
+            "description": "A simple PWA that plays a custom MP3 sound when clicked.",
             "icons": [
                 {
-                    "src": "https://placehold.co/192x192/000000/FFFFFF?text=♂",
+                    "src": "https://placehold.co/192x192/000000/FFFFFF?text=🔊",
                     "sizes": "192x192",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://placehold.co/512x512/000000/FFFFFF?text=♂",
+                    "src": "https://placehold.co/512x512/000000/FFFFFF?text=🔊",
                     "sizes": "512x512",
                     "type": "image/png"
                 }
@@ -111,36 +114,20 @@
 
 
         // --- Sound Logic ---
-        const playSoundSymbol = document.getElementById('playSoundSymbol');
-        let audioContext;
+        const playSoundButton = document.getElementById('playSoundSymbol');
+        const customSound = document.getElementById('customSound');
 
-        playSoundSymbol.addEventListener('click', () => {
-            // Create AudioContext on the first user interaction
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-
-            // Create an OscillatorNode for the tone
-            const oscillator = audioContext.createOscillator();
-            // Create a GainNode to control volume (and prevent clipping)
-            const gainNode = audioContext.createGain();
-
-            // Configure the sound
-            oscillator.type = 'sine'; // A clean, pure tone
-            oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // 440 Hz is the note 'A'
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.01); // Ramp up volume quickly
-
-            // Connect the nodes: oscillator -> gain -> speakers
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            // Start the sound
-            oscillator.start(audioContext.currentTime);
-
-            // Stop the sound after 0.5 seconds
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.5);
-            oscillator.stop(audioContext.currentTime + 0.5);
+        playSoundButton.addEventListener('click', () => {
+            // Reset the sound to the beginning in case it's already playing
+            customSound.currentTime = 0;
+            // Play the sound
+            customSound.play().catch(error => {
+                // The .play() method returns a Promise. It can be rejected if the user
+                // hasn't interacted with the page yet. Modern browsers have this policy
+                // to prevent websites from auto-playing audio. The first click should
+                // always work.
+                console.error("Error playing sound:", error);
+            });
         });
     </script>
 </body>
