@@ -32,10 +32,7 @@
 <body class="bg-white flex items-center justify-center h-screen">
 
     <!-- The SVG symbol is now the button -->
-    <svg id="playSoundSymbol" class="w-64 h-64 text-black cursor-pointer" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 4C13.6569 4 15 5.34315 15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4Z"/>
-        <path d="M17 20V12H18C18.5523 12 19 11.5523 19 11V10C19 9.44772 18.5523 9 18 9H6C5.44772 9 5 9.44772 5 10V11C5 11.5523 5.44772 12 6 12H7V20H9V15H15V20H17Z"/>
-    </svg>
+    <img id="playSoundSymbol" src="Black Life Simulator.png" ... > 
 
     <script>
         // --- PWA Service Worker and Manifest Setup ---
@@ -46,6 +43,7 @@
             const urlsToCache = [
                 '/',
                 '/index.html'
+				'Black Life Simulator.png'
             ];
 
             self.addEventListener('install', event => {
