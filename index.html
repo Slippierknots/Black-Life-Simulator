@@ -6,7 +6,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#FFFFFF"/>
-    <link rel="apple-touch-icon" href="https://placehold.co/192x192/000000/FFFFFF?text=🔊">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
     <link rel="manifest" href="manifest.json">
 
     <title>Custom Sound Player</title>
@@ -48,7 +48,9 @@
                 '/',
                 '/index.html',
                 'Black Life Simulator.png', // The image for the button
-                'smoke-detector-beep.mp3'       // The custom MP3 sound
+                'smoke-detector-beep.mp3',
+				'icon-192x192.png',
+				'icon-512x512.png'// The custom MP3 sound
             ];
 
             self.addEventListener('install', event => {
@@ -97,12 +99,12 @@
             "description": "A simple PWA that plays a custom MP3 sound when clicked.",
             "icons": [
                 {
-                    "src": "https://placehold.co/192x192/000000/FFFFFF?text=🔊",
+                    "src": "icon-192x192.png",
                     "sizes": "192x192",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://placehold.co/512x512/000000/FFFFFF?text=🔊",
+                    "src": "icon-512x512.png",
                     "sizes": "512x512",
                     "type": "image/png"
                 }
